@@ -47,4 +47,30 @@ signed main() {
     }
     std::cout << "\n";
     
+    stack::Stack <int> e(std::move(d));
+    
+    e.push(1);
+    e.push(2);
+    e.push(3);
+    
+     
+    std::cout << "e:\n";
+    while (e.getSize()) {
+        std::cout << e.top() << " ";
+        e.pop();
+    }
+    std::cout << "\n";
+    
+    e.push(4);
+    e.push(5);
+    e.push(6);
+    
+    stack::Stack <int> f = (std::move(e));
+    
+    std::cout << "f:\n";
+    while (f.getSize()) {
+        std::cout << f.top() << " ";
+        f.pop();
+    }
+    std::cout << "\n";
 }
