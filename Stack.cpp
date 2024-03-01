@@ -36,7 +36,8 @@ namespace stack
     Stack<T>::Stack(const Stack& other)
     {
         delete[] ptr;
-        ptr = (other.ptr? new T(*other.ptr): nullptr); //при T = int[k] надо рассматривать отдельно
+        ptr = (other.ptr? new T[other.size]: nullptr); //при T = int[k] надо рассматривать отдельно
+        std::copy(other.ptr, other.ptr + other.size, ptr);
          
         size = other.size;
         end = other.end;
