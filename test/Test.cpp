@@ -73,4 +73,16 @@ signed main() {
         f.pop();
     }
     std::cout << "\n";
+    
+    stack::Stack <double> g;
+    
+    g.push(0.5);
+    g.push(1.5);
+    
+    std::cout << "g:\n";
+    while (g.getSize()) {
+        std::cout << g.top() << " ";
+        g.pop();
+    }
+    std::cout << "\n";
 }
