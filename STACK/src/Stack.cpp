@@ -1,47 +1,45 @@
 #include <algorithm>
-//#include <type_traits>
-
+#include <iostream>
 #include "../include/Stack.h"
 
 namespace stack
 {
+    template<class T> 
+    Stack<T>::Stack() = default;
+            
     template<class T>
-    Stack<T>::Stack()
+    Stack<T>::Stack(int newSize)
     {
-        //if (std::is_same<T, int[5]>::value) {
-        //    isArr = true;
-        //}
-    }
-    
-    template<class T>
-    Stack<T>::Stack(int newSize) {
         ptr = new T[newSize];
         size = newSize;
         end = 0;
-
-        //проверка на int[]
     }
     
     template<class T>
     Stack<T>::~Stack()
     {
-        if (!isArr) {
-            if (ptr) {
-                delete[] ptr; 
-            }
-        }
+        delete[] ptr; 
     }
     
+    
+    template<class T>
+    void Stack<T>::swap(Stack& first, Stack& second)
+    {
+        std::swap(first.ptr, second.ptr);
+        std::swap(first.size, second.size);
+        std::swap(first.end, second.end);
+    }
+
+
     template<class T>
     Stack<T>::Stack(const Stack& other)
     {
         delete[] ptr;
-        ptr = (other.ptr? new T[other.size]: nullptr); //при T = int[k] надо рассматривать отдельно
+        ptr = (other.ptr? new T[other.size]: nullptr);
         std::copy(other.ptr, other.ptr + other.size, ptr);
          
         size = other.size;
         end = other.end;
-        isArr = other.isArr;
     }
     
     template<class T>
@@ -52,19 +50,17 @@ namespace stack
         
         size = other.size;
         end = other.end;
-        isArr = other.isArr;
         
-        other.ptr = nullptr; //Вопрос! это бесполезно (нам передали rvalue)?
+        other.ptr = nullptr;
         other.size = 0;
         other.end = 0;
-        other.isArr = false;
     }
     
     template<class T>
     Stack<T>& Stack<T>::operator=(const Stack& other)
     {
         Stack <T> interim(other);
-        std::swap(interim, *this);
+        swap(interim, *this);
         
         return *this;
     }
@@ -73,10 +69,11 @@ namespace stack
     Stack<T>& Stack<T>::operator=(Stack&& other)
     {
         Stack <T> interim(std::move(other));
-        std::swap(interim, *this);
+        swap(interim, *this);
 
         return *this;
     }
+    
     
     template<class T>
     void Stack<T>::resize(int newSize) {
@@ -87,6 +84,7 @@ namespace stack
         delete[] ptr;
         std::swap(interim, ptr);
     }
+    
     
     template<class T>
     void Stack<T>::push(const T& element)
@@ -102,9 +100,9 @@ namespace stack
     template<class T>
     void Stack<T>::pop()
     {
-        if (size == 0) {
+        if (end == 0) {
             std::cout << "ОШИБКА! Stack пуст\n";
-            return;
+            throw "ERROR! Stack is empty";
         }
         
         --end;
@@ -113,12 +111,10 @@ namespace stack
     template<class T>
     T Stack<T>::top()
     {
-        //проблема с возращением int[]
-        if (size == 0)
+        if (end == 0)
         {
             std::cout << "ОШИБКА! Stack пуст\n";
-            T ret;
-            return ret;
+            throw "ERROR! Stack is empty";
         }
         
         return ptr[end-1];

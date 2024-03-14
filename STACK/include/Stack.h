@@ -29,9 +29,9 @@ private:
     T* ptr = nullptr;
     int size = 0;
     int end = 0;
-    bool isArr = false;
     
     void resize(int newSize);
+    void swap(Stack& first, Stack& second);
 
 };
 
