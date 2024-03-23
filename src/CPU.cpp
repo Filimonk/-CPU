@@ -1,154 +1,54 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <string>
 
-#include "../STACK/src/Stack.cpp"
+#include "preprocessor.h"
+#include "processing.h"
 
 void computingUnit(char *path) {
-    std::ifstream program(path);
-    if (!program) {
-        std::cout << "ОШИБКА в " << path << ":\n";
-        std::cout << "    Программа не найдена\n";
-        return;
-    }
+    int len = strlen(path);
+    std::string fileActionType = ".";
     
-    std::string word;
-    program >> word;
+    std::ios::openmode mode;
 
-    if (word != "BEGIN") {
-        std::cout << "ОШИБКА в " << path << ":\n";
-        std::cout << "    Программа не была запущена\n";
-        return;
-    }
-    
-    stack::Stack <int> stack;
-
-    int numbOfRegs = 20;
-    int *regs = new int[numbOfRegs + 2];
-
-    program >> word;
-    while (word != "END") {
-        if (word == "PUSH") {
-            int value0;
-            
-            if (program >> value0) {
-                stack.push(value0);
-            }
-            else {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << "    Вводится не число\n";
-                break;
-            }
-        }
-        else if (word == "POP") {
-            try {
-                stack.pop();
-            }
-            catch (const char* error) {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << error << "\n";
-                break;
-            }
-        }
-        else if (word == "PUSHR") {
-            int reg0;
-
-            if (program >> reg0) {
-                if (reg0 >= numbOfRegs) {
-                    std::cout << "ОШИБКА! в " << path << ":\n";
-                    std::cout << "    Обращение к несуществующему регистру\n";
-                    break;
-                }
-                
-                stack.push(regs[reg0]);
-            }
-            else {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << "    Вводится не число\n";
-                break;
-            }
-        }
-        else if (word == "POPR") {
-            int reg0;
-
-            if (program >> reg0) {
-                if (reg0 >= 20) {
-                    std::cout << "ОШИБКА! в " << path << ":\n";
-                    std::cout << "    Обращение к несуществующему регистру\n";
-                    break;
-                }
-                
-                regs[reg0] = stack.top();
-                stack.pop();
-            }
-            else {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << "    Вводится не число\n";
-                break;
-            }
-        }
-        else if (word == "ADD") {
-            regs[20] = stack.top();
-            stack.pop();
-            regs[20] += stack.top();
-            stack.push(regs[20] - stack.top());
-            stack.push(regs[20]);
-        }
-        else if (word == "SUB") {
-            regs[20] = stack.top();
-            stack.pop();
-            regs[20] -= stack.top(); //вычитаем из верхнего числа нижнее!!!
-            stack.push(regs[20] + stack.top());
-            stack.push(regs[20]);
-        }
-        else if (word == "MUL") {
-            regs[20] = stack.top();
-            stack.pop();
-            regs[21] = stack.top();
-            stack.push(regs[20]);
-            stack.push(regs[20] * regs[21]);
-        }
-        else if (word == "DIV") {
-            regs[20] = stack.top();
-            stack.pop();
-            regs[21] = stack.top();
-            stack.push(regs[20]);
-            stack.push(regs[20] / regs[21]); //верхнее число - делимое,
-                                             //нижнее - делитель
-        }
-        else if (word == "OUT") {
-            try {
-                std::cout << stack.top() << "\n";
-                stack.pop();
-            }
-            catch (const char* error) {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << error << "\n";
-                break;
-            }
-        }
-        else if (word == "IN") {
-            int value0;
-            
-            if (std::cin >> value0) {
-                stack.push(value0);
-            }
-            else {
-                std::cout << "ОШИБКА! в " << path << ":\n";
-                std::cout << "    Вводится не число\n";
-                break;
-            }
-        }
-        else {
-            std::cout << "ОШИБКА! в " << path << ":\n";
-            std::cout << "    Команда пока неизвесна\n";
-            break;
-        } 
+    if (len >= 5 && path[len - 5] == '.' &&
+                    path[len - 4] == 'p' && 
+                    path[len - 3] == 'r' &&
+                    path[len - 2] == 'o' && 
+                    path[len - 1] == 'g') {
+        fileActionType = "compil";
         
-        program >> word;
+        mode |= std::ios::in;
     }
     
-    delete[] regs;
+    if (len >= 2 && path[len - 2] == '.' && path[len - 1] == 'o') {
+        fileActionType = "run";
+        mode |= (std::ios::in | std::ios::binary);
+    }
+    
+    if (fileActionType == ".") {
+        std::cout << "ОШИБКА в " << path << ":\n";
+        std::cout << "    Неправильно задан путь\n";
+        return;
+    }
+    
+    std::ifstream file(path, mode);
+    
+    if (!file) {
+        std::cout << "ОШИБКА в " << path << ":\n";
+        std::cout << "    Файл не найден\n";
+        return;
+    }
+    
+    if (fileActionType == "compil") {
+        preprocessor::preprocessing(file, path);
+    }
+    else {
+        processor::processing(file, path);
+    }
+    
+    file.close();
 }
 
 int main(int argc, char *argv[]) {

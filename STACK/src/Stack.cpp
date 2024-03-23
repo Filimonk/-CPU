@@ -1,6 +1,6 @@
 #include <algorithm>
 #include <iostream>
-#include "../include/Stack.h"
+#include "Stack.h"
 
 namespace stack
 {

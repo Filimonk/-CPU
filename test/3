@@ -1,9 +1,0 @@
-   
-
-  BEGIN
-        PUSH 14
-        PUSH 134
-        POP
-        POP
-  
-     END
