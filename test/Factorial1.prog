@@ -1,0 +1,19 @@
+BEGIN
+    IN
+    POPR R0
+
+    PUSH 1
+    PUSH 0
+    
+    PUSHR R0
+L0  POPR R0 
+    PUSH 1
+    ADD
+    POPR R1 PUSHR R1
+    MUL
+    PUSHR R1
+    PUSHR R0
+    JA L0
+    
+    POP POP OUT
+END

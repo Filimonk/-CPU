@@ -7,19 +7,20 @@ namespace command
 {
 
 const int numbOfRegs = 256;
+const int INT_MIN = (1 << 31) + 1;
 
-void PUSH(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void PUSH(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     stack.push(stream[indexInStream + 1]);
     indexInStream += 2;
 }
 
-void PUSHR(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void PUSHR(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int ind = stream[indexInStream + 1];
     stack.push(regs[ind]);
     indexInStream += 2;
 }
 
-void POPR(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void POPR(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int ind = stream[indexInStream + 1];
     int val = stack.top();
     regs[ind] = val;
@@ -27,52 +28,93 @@ void POPR(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs)
     indexInStream += 2;
 }
 
-void JMP(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JMP(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    indexInStream = label[stream[indexInStream + 1]];
 }
 
-void JEQ(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JEQ(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 == stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void JNE(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JNE(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 != stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void JA(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JA(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 > stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void JAE(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JAE(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 >= stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void JB(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JB(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 < stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void JBE(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void JBE(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    int val1 = stack.top();
+    stack.pop();
+    if (val1 <= stack.top()) {
+        indexInStream = label[stream[indexInStream + 1]];
+    }
+    else {
+        indexInStream += 2;
+    }
+    stack.push(val1);
 }
 
-void CALL(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void CALL(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    stack.push(INT_MIN);
+    indexInStream = label[stream[indexInStream + 1]];
 }
 
-void POP(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void POP(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     stack.pop();
     ++indexInStream;
 }
 
-void ADD(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void ADD(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp = stack.top();
     stack.pop();
     temp += stack.top();
@@ -81,7 +123,7 @@ void ADD(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) 
     ++indexInStream;
 }
 
-void SUB(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void SUB(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp = stack.top();
     stack.pop();
     temp -= stack.top(); // Вычитание из верхнего числа меньшее
@@ -90,7 +132,7 @@ void SUB(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) 
     ++indexInStream;
 }
 
-void MUL(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void MUL(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp = stack.top();
     stack.pop();
     temp *= stack.top();
@@ -99,7 +141,7 @@ void MUL(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) 
     ++indexInStream;
 }
 
-void DIV(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void DIV(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp = stack.top();
     stack.pop();
     temp /= stack.top(); // Деление верхнего числа на нижнее
@@ -108,21 +150,21 @@ void DIV(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) 
     ++indexInStream;
 }
 
-void OUT(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void OUT(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp = stack.top();
     stack.pop();
     std::cout << temp << "\n";
     ++indexInStream;
 }
 
-void IN(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void IN(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     int temp;
     std::cin >> temp;
     stack.push(temp);
     ++indexInStream;
 }
 
-void RET(int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+void RET(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     
     std::cout << "ahaha\n";
 }

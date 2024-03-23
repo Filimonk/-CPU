@@ -40,79 +40,80 @@ void processing(std::ifstream &byteCode, char *path) {
         //std::cout << ":" << stream[indexInStream] << "\n";
         switch (stream[indexInStream]) {
             case (int)commands::PUSH:
-                command::PUSH(stream, indexInStream, stack, regs);
+                //std::cout << ":" << indexInStream << "\n";
+                command::PUSH(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::PUSHR:
-                command::PUSHR(stream, indexInStream, stack, regs);
+                command::PUSHR(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::POPR:
-                command::POPR(stream, indexInStream, stack, regs);
+                command::POPR(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JMP:
-                command::JMP(stream, indexInStream, stack, regs);
+                command::JMP(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JEQ:
-                command::JEQ(stream, indexInStream, stack, regs);
+                command::JEQ(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JNE:
-                command::JNE(stream, indexInStream, stack, regs);
+                command::JNE(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JA:
-                command::JA(stream, indexInStream, stack, regs);
+                command::JA(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JAE:
-                command::JAE(stream, indexInStream, stack, regs);
+                command::JAE(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JB:
-                command::JB(stream, indexInStream, stack, regs);
+                command::JB(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::JBE:
-                command::JBE(stream, indexInStream, stack, regs);
+                command::JBE(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::CALL:
-                command::CALL(stream, indexInStream, stack, regs);
+                command::CALL(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::POP:
-                command::POP(stream, indexInStream, stack, regs);
+                command::POP(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::ADD:
-                command::ADD(stream, indexInStream, stack, regs);
+                command::ADD(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::SUB:
-                command::SUB(stream, indexInStream, stack, regs);
+                command::SUB(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::MUL:
-                command::MUL(stream, indexInStream, stack, regs);
+                command::MUL(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::DIV:
-                command::DIV(stream, indexInStream, stack, regs);
+                command::DIV(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::OUT:
-                command::OUT(stream, indexInStream, stack, regs);
+                command::OUT(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::IN:
-                command::IN(stream, indexInStream, stack, regs);
+                command::IN(label, stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::RET:
-                command::RET(stream, indexInStream, stack, regs);
+                command::RET(label, stream, indexInStream, stack, regs);
                 break;
                
             case (int)commands::END:
