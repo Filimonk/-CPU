@@ -41,6 +41,10 @@ void preprocessing(std::ifstream &program, char *path) {
             if (getNewWord(program, word, path))
                 return;
             
+            if (word[0] != 'R') {
+                std::cout << "ОШИБКА компиляции в " << path << "\n";
+                return;
+            }
             stream.push_back(word.substr(1, word.size() - 1));
         }
         else if (word.size() > 0 && word[0] == 'L') {
