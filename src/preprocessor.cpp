@@ -57,7 +57,7 @@ void preprocessing(std::ifstream &program, char *path) {
                 return;
             }
         }
-        else if (word.size() > 0 && word[0] == 'J') {
+        else if (word.size() > 0 && (word[0] == 'J' || word == "CALL")) {
             stream.push_back(word);
             if (getNewWord(program, word, path))
                 return;
@@ -79,7 +79,7 @@ void preprocessing(std::ifstream &program, char *path) {
                 return;
             }
         }
-        else if (word == "def:");
+        else if (word == "def");
         else {
             stream.push_back(word);
         }

@@ -1,6 +1,8 @@
 #ifndef CPP_COMMAND
 #define CPP_COMMAND
 
+#include <vector>
+
 #include "Stack.h"
 
 namespace command
@@ -26,7 +28,7 @@ void JB(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, 
 
 void JBE(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);
 
-void CALL(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);
+void CALL(std::vector <std::pair <int, int> > &funcInputSize, int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);
 
 void POP(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);
 
@@ -42,7 +44,7 @@ void OUT(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack,
 
 void IN(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);
 
-void RET(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);    
+void RET(std::vector <std::pair <int, int> > &funcInputSize, int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs);    
 
 }
 

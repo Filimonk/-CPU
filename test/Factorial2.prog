@@ -1,0 +1,26 @@
+Label_return RET
+
+def LFactorial
+    PUSHR R0
+    JB Label_return
+    POP
+    
+    POPR R1 PUSHR R1
+    MUL
+    PUSHR R1
+    
+    PUSH 1 ADD
+    CALL LFactorial
+    RET
+    
+
+BEGIN
+    IN
+    POPR R0
+
+    PUSH 1
+    PUSH 1
+    
+    CALL LFactorial
+    POP OUT
+END

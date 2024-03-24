@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+//#include <pair.h>
 
 #include "command.h"
 #include "../STACK/src/Stack.cpp"
@@ -7,7 +9,6 @@ namespace command
 {
 
 const int numbOfRegs = 256;
-const int INT_MIN = (1 << 31) + 1;
 
 void PUSH(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
     stack.push(stream[indexInStream + 1]);
@@ -104,8 +105,8 @@ void JBE(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack,
     stack.push(val1);
 }
 
-void CALL(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    stack.push(INT_MIN);
+void CALL(std::vector <std::pair <int, int> > &funcInputSize, int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    funcInputSize.push_back({stack.getSize(), indexInStream + 2});
     indexInStream = label[stream[indexInStream + 1]];
 }
 
@@ -164,9 +165,14 @@ void IN(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, 
     ++indexInStream;
 }
 
-void RET(int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
-    
-    std::cout << "ahaha\n";
+void RET(std::vector <std::pair <int, int> > &funcInputSize, int *label, int *stream, int &indexInStream, stack::Stack <int> &stack, int *regs) {
+    std::pair <int, int> lastVal = funcInputSize[funcInputSize.size() - 1];
+    while (stack.getSize() != lastVal.first) {
+        stack.pop();
+    }
+
+    indexInStream = lastVal.second;
+    funcInputSize.pop_back();
 }
 
 }

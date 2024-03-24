@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+//#include <pair.h>
 
 #include "command.h"
 #include "../src/Stack.cpp"
@@ -35,6 +37,8 @@ void processing(std::ifstream &byteCode, char *path) {
     
     const int numbOfRegs = 256;
     int regs[numbOfRegs];
+
+    std::vector <std::pair <int, int> > funcInputSize(cntOfWords);
 
     for (int indexInStream = label[0]; indexInStream < cntOfWords; ) {
         //std::cout << ":" << stream[indexInStream] << "\n";
@@ -81,7 +85,7 @@ void processing(std::ifstream &byteCode, char *path) {
                 break;
 
             case (int)commands::CALL:
-                command::CALL(label, stream, indexInStream, stack, regs);
+                command::CALL(funcInputSize, label,  stream, indexInStream, stack, regs);
                 break;
 
             case (int)commands::POP:
@@ -113,7 +117,7 @@ void processing(std::ifstream &byteCode, char *path) {
                 break;
 
             case (int)commands::RET:
-                command::RET(label, stream, indexInStream, stack, regs);
+                command::RET(funcInputSize, label, stream, indexInStream, stack, regs);
                 break;
                
             case (int)commands::END:
